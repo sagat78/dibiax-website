@@ -729,3 +729,536 @@ a { text-decoration: none; color: inherit; }
   .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
   .footer-bottom-inner { flex-direction: column; text-align: center; }
 }
+
+/* ===========================
+   CARD DEMO OVERLAYS
+   =========================== */
+
+/* Base structure */
+.service-card { overflow: hidden; }
+
+.card-front {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  flex: 1;
+  transition: opacity .25s ease, transform .25s ease;
+}
+
+.card-hint {
+  font-size: .72rem;
+  color: var(--slate-400);
+  letter-spacing: .02em;
+  margin-top: auto;
+  opacity: .8;
+}
+.service-card--featured .card-hint { color: rgba(255,255,255,.35); }
+
+.card-demo {
+  position: absolute;
+  inset: 0;
+  padding: 1.4rem;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .3s ease, transform .3s ease;
+  pointer-events: none;
+  overflow: hidden;
+}
+.service-card:hover .card-demo,
+.service-card.demo-open .card-demo {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.service-card:hover .card-front,
+.service-card.demo-open .card-front {
+  opacity: 0;
+  transform: scale(.97);
+}
+
+/* Demo backgrounds */
+.demo--lookup   { background: linear-gradient(145deg, #083d44, #1C2E30); color: var(--white); }
+.demo--scan,
+.demo--reminder,
+.demo--profile,
+.demo--connect  { background: var(--white); border: 1px solid var(--slate-100); }
+
+/* Demo top badge */
+.demo-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: .62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  padding: .15rem .55rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,.12);
+  color: rgba(255,255,255,.7);
+  margin-bottom: .1rem;
+}
+.demo--scan .demo-badge,
+.demo--reminder .demo-badge,
+.demo--profile .demo-badge,
+.demo--connect .demo-badge {
+  background: var(--teal-lt);
+  color: var(--teal);
+}
+
+/* ---- Keyframes ---- */
+@keyframes demoFadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes demoCursor {
+  0%,49% { opacity: 1; }
+  50%,100% { opacity: 0; }
+}
+@keyframes demoFillBar {
+  from { width: 0; }
+  to   { width: var(--w, 80%); }
+}
+@keyframes demoScanBeam {
+  0%  { top: 6%; }
+  80% { top: 88%; }
+  100%{ top: 88%; opacity: 0; }
+}
+@keyframes demoSlideRight {
+  from { transform: translateX(28px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes demoPulse {
+  0%   { transform: scale(1);   opacity: .45; }
+  100% { transform: scale(3.2); opacity: 0;   }
+}
+
+/* ========================
+   DEMO 1 — Drug Lookup
+   ======================== */
+.demo-searchbar {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: var(--radius-sm);
+  padding: .45rem .7rem;
+  font-size: .8rem;
+  color: var(--white);
+  animation: demoFadeUp .4s ease forwards paused;
+}
+.service-card:hover .demo-searchbar,
+.service-card.demo-open .demo-searchbar { animation-play-state: running; }
+
+.demo-search-icon {
+  width: 13px; height: 13px;
+  flex-shrink: 0;
+  opacity: .6;
+}
+
+.demo-cursor {
+  color: var(--gold-lt);
+  animation: demoCursor .85s step-end infinite paused;
+}
+.service-card:hover .demo-cursor,
+.service-card.demo-open .demo-cursor { animation-play-state: running; }
+
+.demo-result-card {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: var(--radius-sm);
+  padding: .7rem;
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+  flex: 1;
+  animation: demoFadeUp .4s .2s ease forwards paused;
+  opacity: 0;
+}
+.service-card:hover .demo-result-card,
+.service-card.demo-open .demo-result-card { animation-play-state: running; }
+
+.demo-drug-name { font-size: .78rem; font-weight: 700; color: var(--white); }
+.demo-drug-class { font-size: .68rem; color: rgba(255,255,255,.5); }
+
+.demo-bars { display: flex; flex-direction: column; gap: .28rem; margin: .15rem 0; }
+.demo-bar {
+  height: 5px;
+  background: rgba(255,255,255,.1);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+.demo-bar::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 0;
+  background: var(--gold-lt);
+  border-radius: 999px;
+  animation: demoFillBar .55s .4s ease forwards paused;
+}
+.service-card:hover .demo-bar::after,
+.service-card.demo-open .demo-bar::after { animation-play-state: running; }
+
+.demo-chips {
+  display: flex;
+  gap: .3rem;
+  flex-wrap: wrap;
+  animation: demoFadeUp .3s .7s ease forwards paused;
+  opacity: 0;
+}
+.service-card:hover .demo-chips,
+.service-card.demo-open .demo-chips { animation-play-state: running; }
+
+.demo-chip {
+  font-size: .63rem;
+  font-weight: 600;
+  padding: .12rem .48rem;
+  border-radius: 999px;
+  background: rgba(196,149,106,.2);
+  color: var(--gold-lt);
+  border: 1px solid rgba(196,149,106,.28);
+}
+
+/* ========================
+   DEMO 2 — Label Scan
+   ======================== */
+.demo-label-box {
+  border: 1.5px dashed var(--slate-300);
+  border-radius: var(--radius-sm);
+  padding: .7rem;
+  position: relative;
+  overflow: hidden;
+  animation: demoFadeUp .35s ease forwards paused;
+  opacity: 0;
+}
+.service-card:hover .demo-label-box,
+.service-card.demo-open .demo-label-box { animation-play-state: running; }
+
+.demo-rx-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: .7rem;
+  font-weight: 600;
+  color: var(--slate-700);
+  margin-bottom: .4rem;
+}
+.demo-rx-num { color: var(--dark); }
+.demo-rx-date { color: var(--slate-400); font-weight: 400; }
+
+.demo-rx-bar {
+  height: 6px;
+  background: var(--slate-100);
+  border-radius: 999px;
+  margin-bottom: .25rem;
+  overflow: hidden;
+  position: relative;
+}
+.demo-rx-bar::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 0;
+  background: var(--slate-300);
+  border-radius: 999px;
+  animation: demoFillBar .5s .15s ease forwards paused;
+}
+.service-card:hover .demo-rx-bar::after,
+.service-card.demo-open .demo-rx-bar::after { animation-play-state: running; }
+
+.demo-scanline {
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--teal) 40%, var(--teal) 60%, transparent);
+  top: 6%;
+  box-shadow: 0 0 8px var(--teal);
+  animation: demoScanBeam 1.3s .3s ease-in-out forwards paused;
+}
+.service-card:hover .demo-scanline,
+.service-card.demo-open .demo-scanline { animation-play-state: running; }
+
+.demo-scan-confirm {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--teal);
+  animation: demoFadeUp .35s .95s ease forwards paused;
+  opacity: 0;
+}
+.service-card:hover .demo-scan-confirm,
+.service-card.demo-open .demo-scan-confirm { animation-play-state: running; }
+
+.demo-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--teal);
+  color: var(--white);
+  font-size: .7rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.demo-info-chips {
+  display: flex;
+  gap: .3rem;
+  flex-wrap: wrap;
+  animation: demoFadeUp .3s 1.15s ease forwards paused;
+  opacity: 0;
+}
+.service-card:hover .demo-info-chips,
+.service-card.demo-open .demo-info-chips { animation-play-state: running; }
+
+.demo-info-chip {
+  font-size: .63rem;
+  font-weight: 600;
+  padding: .18rem .5rem;
+  background: var(--teal-lt);
+  color: var(--teal);
+  border-radius: 999px;
+}
+
+/* ========================
+   DEMO 3 — Reminders
+   ======================== */
+.demo-notif {
+  display: flex;
+  align-items: flex-start;
+  gap: .6rem;
+  background: var(--slate-100);
+  border-radius: var(--radius-sm);
+  padding: .65rem .8rem;
+  animation: demoSlideRight .45s .1s ease forwards paused;
+  opacity: 0;
+  transform: translateX(28px);
+}
+.service-card:hover .demo-notif,
+.service-card.demo-open .demo-notif { animation-play-state: running; }
+
+.demo-notif-dot {
+  width: 8px; height: 8px;
+  background: var(--teal);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: .3rem;
+}
+.demo-notif-app {
+  font-size: .62rem;
+  font-weight: 700;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.demo-notif-msg {
+  font-size: .76rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin: .08rem 0;
+}
+.demo-notif-sub { font-size: .66rem; color: var(--slate-500); }
+
+.demo-schedule { display: flex; flex-direction: column; gap: .3rem; }
+
+.demo-slot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .32rem .6rem;
+  border-radius: var(--radius-sm);
+  background: var(--slate-100);
+  font-size: .73rem;
+  animation: demoFadeUp .3s ease forwards paused;
+  opacity: 0;
+}
+.demo-slot:nth-child(1) { animation-delay: .4s; }
+.demo-slot:nth-child(2) { animation-delay: .55s; }
+.demo-slot:nth-child(3) { animation-delay: .7s; }
+.service-card:hover .demo-slot,
+.service-card.demo-open .demo-slot { animation-play-state: running; }
+
+.demo-slot--done { opacity: .55; }
+.demo-slot--now { background: var(--teal-lt); border: 1px solid rgba(10,88,96,.15); }
+.demo-slot--now .demo-slot-time { color: var(--teal); }
+
+.demo-slot-time { font-weight: 600; color: var(--dark); }
+.demo-slot-status { font-size: .67rem; color: var(--slate-500); }
+.demo-done { color: var(--teal); font-weight: 600; }
+.demo-now {
+  display: inline-block;
+  background: var(--teal);
+  color: var(--white);
+  font-weight: 700;
+  font-size: .6rem;
+  padding: .1rem .42rem;
+  border-radius: 999px;
+  letter-spacing: .03em;
+}
+.demo-upcoming { color: var(--slate-400); }
+
+/* ========================
+   DEMO 4 — Profile
+   ======================== */
+.demo-profile-hdr {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  animation: demoFadeUp .35s .05s ease forwards paused;
+  opacity: 0;
+}
+.service-card:hover .demo-profile-hdr,
+.service-card.demo-open .demo-profile-hdr { animation-play-state: running; }
+
+.demo-avatar {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-mid));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .68rem;
+  font-weight: 700;
+  color: var(--white);
+  flex-shrink: 0;
+}
+.demo-profile-name { font-size: .8rem; font-weight: 700; color: var(--dark); }
+.demo-profile-sub  { font-size: .67rem; color: var(--slate-500); }
+
+.demo-med-list { display: flex; flex-direction: column; gap: .28rem; }
+
+.demo-med {
+  display: flex;
+  align-items: center;
+  gap: .42rem;
+  font-size: .73rem;
+  color: var(--dark);
+  background: var(--slate-100);
+  padding: .32rem .58rem;
+  border-radius: var(--radius-sm);
+  animation: demoFadeUp .3s ease forwards paused;
+  opacity: 0;
+}
+.demo-med:nth-child(1) { animation-delay: .3s; }
+.demo-med:nth-child(2) { animation-delay: .45s; }
+.demo-med:nth-child(3) { animation-delay: .6s; }
+.service-card:hover .demo-med,
+.service-card.demo-open .demo-med { animation-play-state: running; }
+
+.demo-med--warn { background: #FEF2F2; color: #B91C1C; font-weight: 600; }
+
+.demo-med-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+  flex-shrink: 0;
+}
+.demo-med-dot--warn { background: #DC2626; }
+
+.demo-med-refill {
+  margin-left: auto;
+  font-size: .6rem;
+  background: rgba(196,149,106,.14);
+  color: var(--gold);
+  padding: .08rem .38rem;
+  border-radius: 999px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.demo-caretaker-badge {
+  font-size: .68rem;
+  color: var(--teal);
+  background: var(--teal-lt);
+  padding: .28rem .62rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  animation: demoFadeUp .3s .75s ease forwards paused;
+  opacity: 0;
+}
+.service-card:hover .demo-caretaker-badge,
+.service-card.demo-open .demo-caretaker-badge { animation-play-state: running; }
+
+/* ========================
+   DEMO 5 — Pharmacy Connect
+   ======================== */
+.demo-pharmacy-card {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  background: var(--teal-lt);
+  border-radius: var(--radius-sm);
+  padding: .6rem .75rem;
+  animation: demoFadeUp .35s .05s ease forwards paused;
+  opacity: 0;
+}
+.service-card:hover .demo-pharmacy-card,
+.service-card.demo-open .demo-pharmacy-card { animation-play-state: running; }
+
+.demo-pharmacy-icon { font-size: 1.35rem; }
+.demo-pharmacy-name { font-size: .8rem; font-weight: 700; color: var(--dark); }
+.demo-pharmacy-open { font-size: .66rem; color: var(--teal); font-weight: 600; }
+
+.demo-actions {
+  display: flex;
+  gap: .45rem;
+  animation: demoFadeUp .3s .3s ease forwards paused;
+  opacity: 0;
+}
+.service-card:hover .demo-actions,
+.service-card.demo-open .demo-actions { animation-play-state: running; }
+
+.demo-action {
+  flex: 1;
+  text-align: center;
+  padding: .48rem .4rem;
+  border-radius: var(--radius-sm);
+  font-size: .73rem;
+  font-weight: 600;
+  background: var(--slate-100);
+  color: var(--dark);
+  border: 1px solid var(--slate-200);
+}
+.demo-action--primary {
+  background: var(--teal);
+  color: var(--white);
+  border-color: var(--teal);
+}
+
+.demo-map-area {
+  flex: 1;
+  background: var(--teal-lt);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-height: 56px;
+  animation: demoFadeUp .3s .5s ease forwards paused;
+  opacity: 0;
+}
+.service-card:hover .demo-map-area,
+.service-card.demo-open .demo-map-area { animation-play-state: running; }
+
+.demo-map-pin { font-size: 1.5rem; position: relative; z-index: 1; }
+
+.demo-pulse {
+  position: absolute;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: rgba(10,88,96,.18);
+  animation: demoPulse 1.6s .65s ease-out infinite paused;
+}
+.demo-pulse--2 { animation-delay: 1.3s; }
+.service-card:hover .demo-pulse,
+.service-card.demo-open .demo-pulse { animation-play-state: running; }

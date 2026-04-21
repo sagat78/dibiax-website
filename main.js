@@ -43,3 +43,18 @@ document.querySelectorAll('.service-card').forEach((card, i) => {
   card.style.transition = `opacity .5s ease ${i * 80}ms, transform .5s ease ${i * 80}ms`;
   observer.observe(card);
 });
+
+// Card demo: tap to preview on touch devices
+const isTouchDevice = () => window.matchMedia('(hover: none)').matches;
+
+document.querySelectorAll('.service-card').forEach(card => {
+  card.addEventListener('click', () => {
+    if (!isTouchDevice()) return;
+    const isOpen = card.classList.toggle('demo-open');
+    if (isOpen) {
+      document.querySelectorAll('.service-card.demo-open').forEach(c => {
+        if (c !== card) c.classList.remove('demo-open');
+      });
+    }
+  });
+});
