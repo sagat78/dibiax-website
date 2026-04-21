@@ -9,21 +9,32 @@ window.addEventListener('scroll', () => {
 });
 
 // Mobile menu toggle
-const hamburger = document.getElementById('hamburger');
-const navLinks  = document.getElementById('navLinks');
+const hamburger   = document.getElementById('hamburger');
+const navLinks    = document.getElementById('navLinks');
+const navBackdrop = document.getElementById('navBackdrop');
+
+function openMenu() {
+  navLinks.classList.add('open');
+  navBackdrop.classList.add('open');
+  hamburger.setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMenu() {
+  navLinks.classList.remove('open');
+  navBackdrop.classList.remove('open');
+  hamburger.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
 
 hamburger.addEventListener('click', () => {
-  const isOpen = navLinks.classList.toggle('open');
-  hamburger.setAttribute('aria-expanded', isOpen);
-  document.body.style.overflow = isOpen ? 'hidden' : '';
+  navLinks.classList.contains('open') ? closeMenu() : openMenu();
 });
 
-// Close mobile menu when a link is clicked
+navBackdrop.addEventListener('click', closeMenu);
+
 navLinks.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    navLinks.classList.remove('open');
-    document.body.style.overflow = '';
-  });
+  link.addEventListener('click', closeMenu);
 });
 
 // Scroll-reveal for service cards

@@ -100,13 +100,25 @@ a { text-decoration: none; color: inherit; }
 .navbar {
   position: fixed;
   top: 0; left: 0; right: 0;
-  z-index: 100;
+  z-index: 9000;
   padding: .5rem 0;
   background: rgba(255,255,255,.92);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid transparent;
   transition: border-color .3s, box-shadow .3s;
 }
+
+/* Mobile nav backdrop */
+.nav-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 8999;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.nav-backdrop.open { display: block; opacity: 1; }
 
 .navbar.scrolled {
   border-color: var(--slate-100);
@@ -169,7 +181,7 @@ a { text-decoration: none; color: inherit; }
     box-shadow: -4px 0 24px rgba(0,0,0,.25);
     transform: translateX(100%);
     transition: transform .3s ease;
-    z-index: 200;
+    z-index: 9001;
     gap: .5rem;
   }
   .nav-links.open { transform: translateX(0); }
