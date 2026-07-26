@@ -590,16 +590,10 @@ a { text-decoration: none; color: inherit; }
 
 .founder-photo { display: flex; flex-direction: column; align-items: center; }
 
-.photo-placeholder {
+.founder-photo-img {
   width: 200px; height: 200px;
   border-radius: 50%;
-  background: linear-gradient(145deg, var(--teal), var(--dark));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-serif);
-  font-size: 3rem; font-weight: 700;
-  color: var(--white);
+  object-fit: cover;
   flex-shrink: 0;
 }
 
