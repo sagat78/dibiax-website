@@ -34,7 +34,25 @@ hamburger.addEventListener('click', () => {
 navBackdrop.addEventListener('click', closeMenu);
 
 navLinks.querySelectorAll('a').forEach(link => {
+  if (link.classList.contains('nav-dropdown-toggle')) return;
   link.addEventListener('click', closeMenu);
+});
+
+// Product dropdown (tap-to-toggle on mobile, hover on desktop via CSS)
+const productDropdown = document.getElementById('productDropdown');
+const productToggle   = productDropdown.querySelector('.nav-dropdown-toggle');
+
+productToggle.addEventListener('click', e => {
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    e.preventDefault();
+    productDropdown.classList.toggle('open');
+  }
+});
+
+document.addEventListener('click', e => {
+  if (!productDropdown.contains(e.target)) {
+    productDropdown.classList.remove('open');
+  }
 });
 
 // Scroll-reveal for service cards

@@ -151,6 +151,42 @@ a { text-decoration: none; color: inherit; }
 .nav-links .btn-primary { color: var(--white); }
 .nav-links .btn-primary:hover { color: var(--white); }
 
+.nav-dropdown { position: relative; }
+.nav-dropdown-toggle { display: flex; align-items: center; gap: .3rem; }
+.nav-dropdown-toggle .caret { font-size: .7rem; transition: transform .2s; }
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: .75rem;
+  background: var(--white);
+  border: 1px solid var(--slate-100);
+  border-radius: 10px;
+  box-shadow: var(--shadow-lg);
+  min-width: 170px;
+  padding: .4rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity .2s ease, transform .2s ease, visibility .2s;
+}
+.nav-dropdown-menu a {
+  display: block;
+  padding: .55rem .75rem;
+  border-radius: 6px;
+  font-size: .9rem;
+  white-space: nowrap;
+}
+.nav-dropdown-menu a:hover { background: var(--slate-100); }
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown.open .nav-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.nav-dropdown:hover .nav-dropdown-toggle .caret,
+.nav-dropdown.open .nav-dropdown-toggle .caret { transform: rotate(180deg); }
+
 .hamburger {
   display: none;
   flex-direction: column;
@@ -187,6 +223,22 @@ a { text-decoration: none; color: inherit; }
   .nav-links.open { transform: translateX(0); }
   .nav-links a { color: rgba(255,255,255,.85); font-size: 1rem; padding: .5rem 0; width: 100%; }
   .nav-links a:hover { color: var(--white); }
+  .nav-dropdown { width: 100%; }
+  .nav-dropdown-menu {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    background: transparent;
+    border: none;
+    padding: 0 0 0 1rem;
+    min-width: 0;
+    display: none;
+  }
+  .nav-dropdown.open .nav-dropdown-menu { display: block; }
+  .nav-dropdown-menu a { color: rgba(255,255,255,.7); padding: .35rem 0; }
+  .nav-dropdown-menu a:hover { background: transparent; color: var(--white); }
   .nav-links .btn-primary {
     margin-top: .75rem;
     width: 100%;
